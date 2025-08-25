@@ -10,11 +10,5 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Switch back to Jenkins user
+# Switch back to Jenkins user (default in the base image)
 USER jenkins
-
-# Expose default Jenkins port
-EXPOSE 8080
-
-# Default Jenkins entrypoint
-ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
