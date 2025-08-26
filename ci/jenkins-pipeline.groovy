@@ -22,6 +22,16 @@ pipeline {
                 '''
             }
         }
+        stage('Generate Changelog') {
+            steps {
+                sh '''
+                  git cliff --tag "v${VERSION}" --output CHANGELOG.md
+                  git add CHANGELOG.md
+                  git commit -m "docs: update changelog for v${VERSION} [skip ci]" || echo "No changes to commit"
+                  git push origin HEAD:main || echo "No push performed"
+                '''
+            }
+        }
         stage('Version Check') {
             steps {
                 sh './scripts/version-check.sh'
