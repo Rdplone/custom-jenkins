@@ -1,0 +1,19 @@
+[changelog]
+header = "# Changelog\n\n"
+body = """
+All notable changes to this project will be documented here.
+Generated automatically by [git-cliff](https://github.com/orhun/git-cliff).
+"""
+footer = ""
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+commit_parsers = [
+  { message = "^feat", group = "Features" },
+  { message = "^fix", group = "Fixes" },
+  { message = "^docs", group = "Documentation" },
+  { message = "^chore", group = "Chores" },
+  { message = "^refactor", group = "Refactor" },
+  { message = "^test", group = "Tests" },
+]
