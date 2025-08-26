@@ -46,6 +46,27 @@ jobs:
         id: get_version
         run: echo "version=$(cat VERSION)" >> $GITHUB_OUTPUT
 
+      - name: Install git-cliff
+        run: sudo apt-get install -y git-cliff || cargo install git-cliff
+
+      - name: Generate Changelog
+        run: ./scripts/generate-changelog.sh
+
+      - name: Commit & Push Changelog
+        run: |
+          git add CHANGELOG.md
+          git commit -m "docs: update changelog for v$(cat VERSION) [skip ci]" || echo "No changes to commit"
+          git push origin HEAD:main || echo "No push performed"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
