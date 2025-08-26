@@ -11,11 +11,15 @@ pipeline {
                 script {
                     env.VERSION = readFile('VERSION').trim()
                 }
-                sh 'git config user.name "jenkins"'
-                sh 'git config user.email "jenkins@local"'
-                sh 'git add VERSION'
-                sh 'git commit -m "ci: bump version [skip ci]" || echo "No changes to commit"'
-                sh 'git push origin HEAD:main || echo "No push performed"'
+                sh '''
+                  git config user.name "jenkins"
+                  git config user.email "jenkins@local"
+                  git add VERSION
+                  git commit -m "ci: bump version to ${VERSION} [skip ci]" || echo "No changes to commit"
+                  git push origin HEAD:main || echo "No push performed"
+                  git tag -a "v${VERSION}" -m "Release v${VERSION}"
+                  git push origin "v${VERSION}" || echo "No tag push performed"
+                '''
             }
         }
         stage('Version Check') {
